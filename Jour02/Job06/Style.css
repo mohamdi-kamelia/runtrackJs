@@ -1,0 +1,17 @@
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #f0f0f0;
+    padding: 20px;
+    text-align: center;
+}
+
+.plateforme-style header {
+    background-color: #007bff; 
+    color: #ffffff; 
+}
