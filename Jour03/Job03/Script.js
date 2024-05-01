@@ -1,80 +1,64 @@
 $(document).ready(function() {
-  const tiles = $('.tile');
-  const emptyTile = $('#empty');
-  const restartButton = $('#restart');
-  const message = $('#message');
+    const images = ['Images/logo1.PNG', 'Images/logo2.PNG', 'Images/logo3.PNG', 'Images/logo4.PNG', 'Images/logo5.PNG', 'Images/logo6.PNG', 'Images/logo7.PNG', 'Images/logo8.PNG'];
+    initializeGame(images);
 
-  // Assigner les images aux carreaux
-  tiles.each(function(index) {
-    const imageUrl = `url('images/image${index + 1}.png')`;
-    $(this).css({
-      'background-image': imageUrl,
-      'width': '100px',
-      'height': '100px',
-      'border': '1px solid black',
-      'display': 'inline-block'
+    $('#GameStart').click(function() {
+        initializeGame(images);
     });
-  });
-
-  // Mélanger les carreaux
-  shuffleTiles();
-
-  // Ajouter les écouteurs d'événements sur chaque carreau
-  tiles.on('click', moveTile);
-
-  // Écouteur d'événement pour le bouton "Recommencer"
-  restartButton.on('click', function() {
-    shuffleTiles();
-    message.text('');
-  });
-
-  // Fonction pour mélanger les carreaux
-  function shuffleTiles() {
-    const tileArray = $.merge(tiles, emptyTile); // Fusionner les carreaux et la case vide
-    tileArray.sort(() => Math.random() - 0.5); // Mélanger les carreaux
-    tileArray.each(function(index) {
-      $(this).css('order', index + 1);
-    });
-  }
-
-  // Fonction pour déplacer les carreaux
-  function moveTile() {
-    const selectedTile = $(this);
-    const selectedTileOrder = parseInt(selectedTile.css('order'));
-    const emptyTileOrder = parseInt(emptyTile.css('order'));
-
-    if (isAdjacent(selectedTileOrder, emptyTileOrder)) {
-      // Échanger les ordres des carreaux
-      const tempOrder = selectedTile.css('order');
-      selectedTile.css('order', emptyTile.css('order'));
-      emptyTile.css('order', tempOrder);
-
-      // Vérifier si le jeu est terminé
-      if (isGameFinished()) {
-        message.text("Vous avez gagné !");
-        message.css("color", "green");
-      }
-    }
-  }
-
-  // Fonction pour vérifier si deux carreaux sont adjacents
-  function isAdjacent(tileOrder, emptyOrder) {
-    const rowDiff = Math.abs(tileOrder - emptyOrder) / 3;
-    const colDiff = Math.abs(tileOrder - emptyOrder) % 3;
-    return (rowDiff === 1 && colDiff === 0) || (rowDiff === 0 && colDiff === 1);
-  }
-
-  // Fonction pour vérifier si le jeu est terminé
-  function isGameFinished() {
-    let finished = true;
-    tiles.each(function(index) {
-      if (parseInt($(this).css('order')) !== index + 1) {
-        finished = false;
-        return false; // Sortir de la boucle each
-      }
-    });
-    return finished;
-  }
 });
 
-  
+function initializeGame(images) {
+    const taquin = $('#taquin');
+    taquin.empty();
+    let tiles = [];
+
+    for (let i = 0; i < images.length; i++) {
+        const tile = $('<div class="tile"></div>');
+        const img = $('<img>').attr('src',images[i]).attr('alt', 'Image ' + (i + 1));
+        tile.append(img);
+        tiles.push(tile);
+    }
+
+    tiles.push($('<div class="tile empty"></div>'));
+    tiles.sort(() => Math.random() - 0.5);
+
+    tiles.forEach(tile => {
+        taquin.append(tile);
+    });
+
+    $('.tile:not(.empty)').click(function() {
+        MoveIMG(this);
+    });
+}
+
+function MoveIMG(tile) {
+    const emptyTile = $('.empty');
+    const tileIndex = $(tile).index();
+    const emptyIndex = $(emptyTile).index();
+    const rowCount = 3;
+
+    const isAdjacent = 
+        (Math.abs(tileIndex - emptyIndex) === 1 && Math.floor(tileIndex / rowCount) === Math.floor(emptyIndex / rowCount)) ||
+        (Math.abs(tileIndex - emptyIndex) === rowCount && Math.floor(tileIndex / rowCount) !== Math.floor(emptyIndex / rowCount)) ||
+        ((tileIndex === 4 && emptyIndex === 3) || (tileIndex === 3 && emptyIndex === 4));
+
+    if (isAdjacent) {
+        const tileImg = $(tile).children('img').detach();
+        $(emptyTile).append(tileImg);
+        $(emptyTile).removeClass('empty');
+        $(tile).addClass('empty');
+
+        $('.tile').off('click').click(function() {
+            MoveIMG(this);
+        });
+
+        checkVictory();
+    }
+}
+
+function checkVictory() {
+    const tilesOrder = $('#taquin .tile:not(.empty) img').toArray().map(img => $(img).attr('src').match(/logo(\d)\.PNG$/)[1]);
+    if (tilesOrder.join('') === '12345678') {
+        $('#MessageOfVictory').text('Félicitation Vo.').css('color', 'green').show();
+    }
+}

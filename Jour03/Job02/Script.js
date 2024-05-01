@@ -15,8 +15,7 @@ $(document).ready(function(){
         message.text("");
     }
 
-    arcEnCiel.css("display", "flex"); // Utilisation de flexbox pour disposer les images horizontalement
-  
+    arcEnCiel.css("display", "flex"); 
     arcEnCiel.click(function() {
         verifierOrdre();
     });
@@ -37,7 +36,7 @@ $(document).ready(function(){
         }
     }
 
-    // Ajouter la fonctionnalité de glisser-déposer
+
     let draggedImg = null;
 
     arcEnCiel.on("dragstart", "img", function(event) {
@@ -56,7 +55,6 @@ $(document).ready(function(){
         temp.before(draggedImg);
         temp.remove();
         
-        // Après le glisser-déposer, vérifiez l'ordre des images
         verifierOrdre();
     });
 });
