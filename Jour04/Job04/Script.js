@@ -1,25 +1,29 @@
-$(document).ready(function() {
-    // Fonction pour charger les utilisateurs depuis le fichier JSON
-    function loadUsers() {
-        $.getJSON('utilisateur.json', function(users) {
-            var tableRows = '';
-            users.forEach(function(user) {
-                tableRows += '<tr>';
-                tableRows += '<td>' + user.id + '</td>';
-                tableRows += '<td>' + user.nom + '</td>';
-                tableRows += '<td>' + user.prenom + '</td>';
-                tableRows += '<td>' + user.email + '</td>';
-                tableRows += '</tr>';
-            });
-            $('#userTable tbody').html(tableRows);
-        });
-    }
+document.addEventListener("DOMContentLoaded", function() {
+    const updateBtn = document.getElementById("updateBtn");
+    const userTableBody = document.getElementById("userBody");
 
-    // Charger les utilisateurs initialement
-    loadUsers();
+    updateBtn.addEventListener("click", function() {
+        fetch("utilisateur.json")
+            .then(response => response.json())
+            .then(data => {
+                // Effacer le contenu actuel du tableau
+                userTableBody.innerHTML = "";
 
-    // Mettre à jour les utilisateurs lorsqu'on clique sur le bouton "Update"
-    $('#updateBtn').click(function() {
-        loadUsers();
+                // Parcourir les données JSON et les ajouter au tableau
+                data.forEach(user => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${user.id}</td>
+                        <td>${user.nom}</td>
+                        <td>${user.prenom}</td>
+                        <td>${user.email}</td>
+                    `;
+                    userTableBody.appendChild(row);
+                });
+            })
+            .catch(error => console.error("Erreur lors de la récupération des utilisateurs:", error));
     });
+
+    // Mettre à jour le tableau lors du chargement initial de la page
+    updateBtn.click();
 });
