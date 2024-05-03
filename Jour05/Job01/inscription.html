@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h1>Inscription</h1>
@@ -36,10 +36,12 @@
         <div>
             <label for="codePostal">Code postal:</label>
             <input type="text" id="codePostal" name="codePostal">
+            <span class="error" id="codePostalError"></span> 
         </div>
+        
         <button type="submit">S'inscrire</button>
     </form>
-
+    <a href="connexion.html" class="inscription-button ">Se connecter</a>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="script.js"></script>
 </body>

@@ -44,16 +44,22 @@ input[type="password"] {
     font-size: 12px;
 }
 
-button {
-    width: 100%;
+.inscription-button {
+    display: block;
+    width: 150px; 
+    margin: 0 auto; 
+    margin-top: 20px; 
     padding: 10px;
     background-color: #673ab7;
-    color: #ffffff;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-button:hover {
+.inscription-button:hover {
     background-color: #5a2d9c;
 }
